@@ -1,0 +1,178 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Users ───────────────────────────────────────────
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+// ─── Students (Soft Delete) ──────────────────────────
+enum UniformStatus {
+  complete
+  partial
+  none
+}
+
+model Student {
+  id            Int           @id @default(autoincrement())
+  nis           String        @unique
+  name          String
+  className     String        @map("class_name")
+  grade         Int
+  uniformStatus UniformStatus @default(none) @map("uniform_status")
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+  deletedAt     DateTime?     @map("deleted_at")
+
+  transactions Transaction[]
+
+  @@map("students")
+}
+
+// ─── Uniform Items ───────────────────────────────────
+model UniformItem {
+  id                Int      @id @default(autoincrement())
+  name              String
+  category          String
+  type              String
+  icon              String?
+  imageUrl          String?  @map("image_url")
+  minStockThreshold Int      @default(10) @map("min_stock_threshold")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  stockEntries     StockEntry[]
+  stockMovements   StockMovement[]
+  transactionItems TransactionItem[]
+
+  @@map("uniform_items")
+}
+
+// ─── Stock ───────────────────────────────────────────
+enum Size {
+  S
+  M
+  L
+  XL
+  XXL
+}
+
+model StockEntry {
+  id            Int      @id @default(autoincrement())
+  uniformItemId Int      @map("uniform_item_id")
+  size          Size
+  quantity      Int      @default(0)
+  unitCost      Decimal  @map("unit_cost") @db.Decimal(12, 2)
+  unitPrice     Decimal  @map("unit_price") @db.Decimal(12, 2)
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  uniformItem UniformItem @relation(fields: [uniformItemId], references: [id])
+
+  @@unique([uniformItemId, size])
+  @@map("stock_entries")
+}
+
+enum MovementType {
+  inbound
+  outbound
+}
+
+model StockMovement {
+  id            Int          @id @default(autoincrement())
+  uniformItemId Int          @map("uniform_item_id")
+  size          Size
+  movementType  MovementType @map("movement_type")
+  quantity      Int
+  unitCost      Decimal      @map("unit_cost") @db.Decimal(12, 2)
+  unitPrice     Decimal      @map("unit_price") @db.Decimal(12, 2)
+  totalCost     Decimal      @map("total_cost") @db.Decimal(14, 2)
+  note          String?
+  createdAt     DateTime     @default(now()) @map("created_at")
+
+  uniformItem   UniformItem    @relation(fields: [uniformItemId], references: [id])
+  cashBookEntry CashBookEntry?
+
+  @@map("stock_movements")
+}
+
+// ─── Transactions (Soft Delete) ──────────────────────
+model Transaction {
+  id            Int       @id @default(autoincrement())
+  studentId     Int       @map("student_id")
+  invoiceNumber String    @unique @map("invoice_number")
+  totalAmount   Decimal   @map("total_amount") @db.Decimal(14, 2)
+  amountPaid    Decimal   @map("amount_paid") @db.Decimal(14, 2)
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  deletedAt     DateTime? @map("deleted_at")
+
+  student       Student           @relation(fields: [studentId], references: [id])
+  items         TransactionItem[]
+  cashBookEntry CashBookEntry?
+
+  @@map("transactions")
+}
+
+model TransactionItem {
+  id            Int     @id @default(autoincrement())
+  transactionId Int     @map("transaction_id")
+  uniformItemId Int     @map("uniform_item_id")
+  size          Size
+  quantity      Int
+  unitCost      Decimal @map("unit_cost") @db.Decimal(12, 2)
+  unitPrice     Decimal @map("unit_price") @db.Decimal(12, 2)
+  subtotal      Decimal @db.Decimal(14, 2)
+
+  transaction Transaction @relation(fields: [transactionId], references: [id])
+  uniformItem UniformItem @relation(fields: [uniformItemId], references: [id])
+
+  @@map("transaction_items")
+}
+
+// ─── Cash Book (Soft Delete) ─────────────────────────
+enum CashBookType {
+  income
+  expense
+}
+
+enum RefType {
+  automated
+  manual
+}
+
+model CashBookEntry {
+  id              Int          @id @default(autoincrement())
+  transactionId   Int?         @unique @map("transaction_id")
+  stockMovementId Int?         @unique @map("stock_movement_id")
+  type            CashBookType
+  category        String
+  title           String
+  reference       String
+  refType         RefType      @map("ref_type")
+  amount          Decimal      @db.Decimal(14, 2)
+  runningBalance  Decimal      @map("running_balance") @db.Decimal(14, 2)
+  description     String?
+  entryDate       DateTime     @map("entry_date") @db.Date
+  createdAt       DateTime     @default(now()) @map("created_at")
+  updatedAt       DateTime     @updatedAt @map("updated_at")
+  deletedAt       DateTime?    @map("deleted_at")
+
+  transaction   Transaction?   @relation(fields: [transactionId], references: [id])
+  stockMovement StockMovement? @relation(fields: [stockMovementId], references: [id])
+
+  @@map("cash_book_entries")
+}
