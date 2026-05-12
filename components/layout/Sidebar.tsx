@@ -34,20 +34,23 @@ export default function Sidebar({ isCollapsed }: SidebarProps) {
 
   return (
     <nav
-      className={`h-screen w-72 fixed left-0 top-0 overflow-y-auto bg-surface-container-low flex flex-col gap-2 p-6 z-50 transition-all duration-300 ease-in-out ${
-        isCollapsed ? "sidebar-collapsed" : ""
-      }`}
+      className={`h-screen w-72 fixed left-0 top-0 overflow-y-auto bg-surface-container-low flex flex-col gap-2 p-6 z-50 transition-all duration-300 ease-in-out ${isCollapsed ? "sidebar-collapsed" : ""
+        }`}
     >
       <div className="mb-8 px-4 flex items-center gap-3">
-        <div className="w-10 h-10 rounded-lg bg-primary-container text-on-primary-container flex items-center justify-center font-headline font-black text-xl">
-          PL
+        <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center">
+          <img
+            src="/logo.png"
+            alt="Logo SMP Al-Azhar"
+            className="w-full h-full object-contain drop-shadow-sm"
+          />
         </div>
         <div>
           <h1 className="text-xl font-black text-primary font-headline tracking-tight">
-            PrecisionLoom
+            SMP Al Azhar
           </h1>
           <p className="text-xs text-on-surface-variant font-label">
-            Uniform Distribution
+            Sistem pendataan seragam
           </p>
         </div>
       </div>
@@ -55,14 +58,15 @@ export default function Sidebar({ isCollapsed }: SidebarProps) {
       <div className="flex flex-col gap-2 w-full">
         {navItems.map((item) => {
           const isActive =
-            item.to === "/" ? pathname === "/" : pathname.startsWith(item.to);
+            item.to === "/"
+              ? pathname === "/"
+              : pathname === item.to || pathname.startsWith(`${item.to}/`);
           return (
             <Link
               key={item.to}
               href={item.to}
-              className={`${baseClasses} ${
-                isActive ? activeClasses : inactiveClasses
-              }`}
+              className={`${baseClasses} ${isActive ? activeClasses : inactiveClasses
+                }`}
             >
               <span
                 className="material-symbols-outlined text-[20px]"

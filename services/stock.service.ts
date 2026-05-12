@@ -101,16 +101,16 @@ export async function getStockAlerts() {
   return entries
     .filter((entry) => entry.quantity <= entry.uniformItem.minStockThreshold)
     .map((entry) => {
-      let level: "out_of_stock" | "critical" | "low";
+      let level: "Stok habis" | "Stok hampir habis" | "Stok sedikit";
       if (entry.quantity <= 0) {
-        level = "out_of_stock";
+        level = "Stok habis";
       } else if (
         entry.quantity <=
         Math.floor(entry.uniformItem.minStockThreshold / 2)
       ) {
-        level = "critical";
+        level = "Stok hampir habis";
       } else {
-        level = "low";
+        level = "Stok sedikit";
       }
       return {
         level,

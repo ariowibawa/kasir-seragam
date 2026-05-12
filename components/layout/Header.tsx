@@ -18,7 +18,7 @@ export default function Header({ toggleSidebar, isSidebarCollapsed }: HeaderProp
           </span>
         </button>
         <h2 className="font-headline text-lg font-bold text-primary">
-          Uniform Management
+          Manajemen Seragam
         </h2>
       </div>
 

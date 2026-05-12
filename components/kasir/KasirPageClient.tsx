@@ -90,6 +90,11 @@ export default function KasirPageClient({ uniformItems }: { uniformItems: Unifor
     );
 
     if (existingIdx >= 0) {
+      const currentQty = cart[existingIdx].quantity;
+      if (currentQty >= sizeEntry.quantity) {
+        alert(`Only ${sizeEntry.quantity} items available in stock for ${item.name} size ${size}`);
+        return;
+      }
       const updated = [...cart];
       updated[existingIdx].quantity += 1;
       setCart(updated);
@@ -112,6 +117,29 @@ export default function KasirPageClient({ uniformItems }: { uniformItems: Unifor
     setCart(cart.filter((_, i) => i !== index));
   };
 
+  const updateCartQuantity = (index: number, newQuantity: number) => {
+    const updated = [...cart];
+    
+    // Allow 0 for temporary empty input state while typing
+    if (newQuantity < 0) return;
+    
+    if (newQuantity > 0) {
+      const item = cart[index];
+      const originalItem = uniformItems.find(u => u.id === item.uniformItemId);
+      const sizeEntry = originalItem?.sizes.find(s => s.size === item.size);
+      
+      if (sizeEntry && newQuantity > sizeEntry.quantity) {
+        alert(`Only ${sizeEntry.quantity} items available in stock for ${item.name} size ${item.size}`);
+        updated[index].quantity = sizeEntry.quantity;
+        setCart(updated);
+        return;
+      }
+    }
+
+    updated[index].quantity = newQuantity;
+    setCart(updated);
+  };
+
   const processTransaction = async () => {
     if (!selectedStudent) {
       alert("Please select a student first.");
@@ -119,6 +147,10 @@ export default function KasirPageClient({ uniformItems }: { uniformItems: Unifor
     }
     if (cart.length === 0) {
       alert("Cart is empty.");
+      return;
+    }
+    if (cart.some(c => c.quantity <= 0)) {
+      alert("Please ensure all items have a valid quantity of at least 1.");
       return;
     }
 
@@ -325,7 +357,24 @@ export default function KasirPageClient({ uniformItems }: { uniformItems: Unifor
                   <h6 className="text-sm font-semibold font-body text-on-surface">{item.name}</h6>
                   <div className="flex items-center gap-3 mt-1">
                     <span className="text-xs font-label text-on-surface-variant bg-surface px-2 py-1 rounded">Size: {item.size}</span>
-                    <span className="text-xs font-label text-on-surface-variant">Qty: {item.quantity}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-label text-on-surface-variant">Qty:</span>
+                      <input
+                        type="number"
+                        min="1"
+                        className="w-16 bg-surface-container-high border-none rounded px-2 py-1 text-xs font-body text-on-surface focus:ring-1 focus:ring-primary outline-none"
+                        value={item.quantity === 0 ? '' : item.quantity}
+                        onChange={(e) => {
+                          const val = e.target.value === '' ? 0 : parseInt(e.target.value, 10);
+                          if (!isNaN(val)) {
+                            updateCartQuantity(idx, val);
+                          }
+                        }}
+                        onBlur={() => {
+                          if (item.quantity === 0) updateCartQuantity(idx, 1);
+                        }}
+                      />
+                    </div>
                   </div>
                 </div>
                 <div className="text-right">

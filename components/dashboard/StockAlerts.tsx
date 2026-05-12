@@ -1,5 +1,5 @@
 interface StockAlert {
-  level: "out_of_stock" | "critical" | "low";
+  level: "Stok habis" | "Stok hampir habis" | "Stok sedikit";
   itemName: string;
   size: string;
   remaining: number;
@@ -7,20 +7,20 @@ interface StockAlert {
 }
 
 const levelConfig = {
-  out_of_stock: {
-    label: "Out of Stock",
+  "Stok habis": {
+    label: "Stok habis",
     dotClass: "bg-error",
     textClass: "text-error",
     bgClass: "bg-error-container/30",
   },
-  critical: {
-    label: "Critical",
+  "Stok hampir habis": {
+    label: "Stok hampir habis",
     dotClass: "bg-error",
     textClass: "text-on-error-container",
     bgClass: "bg-error-container/20",
   },
-  low: {
-    label: "Low Stock",
+  "Stok sedikit": {
+    label: "Stok sedikit",
     dotClass: "bg-tertiary",
     textClass: "text-on-tertiary-container",
     bgClass: "bg-tertiary-fixed/20",

@@ -24,45 +24,37 @@ export default async function DashboardPage() {
     <main className="flex-1 p-10 max-w-7xl mx-auto w-full flex flex-col gap-10 overflow-y-auto">
       {/* Welcome Header */}
       <section>
-        <h2 className="font-headline text-3xl font-bold text-on-surface mb-2">Welcome, Admin!</h2>
-        <p className="font-body text-on-surface-variant">Here is the latest snapshot of your inventory and distribution metrics.</p>
+        <h2 className="font-headline text-3xl font-bold text-on-surface mb-2">Selamat Datang!</h2>
+        <p className="font-body text-on-surface-variant">Berikut adalah rangkuman data seragam terbaru.</p>
       </section>
 
       {/* Quick Stats Bento Grid */}
       <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatsCard
-          title="Total Students"
+          title="Total Siswa"
           icon="groups"
           value={stats.totalStudents.toLocaleString("id-ID")}
-          subtext={`Active students`}
+          subtext={`Siswa terdata`}
           bgClass="bg-primary-fixed"
           textClass="text-on-primary-fixed"
         />
         <StatsCard
-          title="Uniforms Distributed"
+          title="Seragam Terbeli"
           icon="checkroom"
           value={stats.uniformsDistributed.total.toLocaleString("id-ID")}
-          subtext={`Today: ${stats.uniformsDistributed.today} / Total`}
+          subtext={`Hari ini: ${stats.uniformsDistributed.today} / Total`}
           subtextHighlight={String(stats.uniformsDistributed.today)}
           bgClass="bg-secondary-container"
           textClass="text-on-secondary-container"
           highlightClass="text-primary"
         />
         <StatsCard
-          title="Income Today"
+          title="Pendapatan Hari Ini"
           icon="payments"
           value={formatAmount(stats.incomeToday.amount)}
-          subtext={`${stats.incomeToday.transactionCount} Transactions`}
+          subtext={`${stats.incomeToday.transactionCount} Transaksi`}
           bgClass="bg-primary-container"
           textClass="text-on-primary-container"
-        />
-        <StatsCard
-          title="Unpaid Balance"
-          icon="warning"
-          value={`${stats.unpaidBalance.percentage}%`}
-          subtext={`${stats.unpaidBalance.studentsRemaining} Students remaining`}
-          bgClass="bg-error-container"
-          textClass="text-on-error-container"
         />
       </section>
 
