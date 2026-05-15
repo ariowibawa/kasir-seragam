@@ -49,11 +49,15 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-10">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-primary-container text-on-primary-container flex items-center justify-center font-headline font-black text-2xl">
-            PL
+          <div className="w-28 h-28 mx-auto mb-4 flex-shrink-0 flex items-center justify-center">
+            <img
+              src="/logo.png"
+              alt="Logo SMP Al-Azhar"
+              className="w-full h-full object-contain drop-shadow-md"
+            />
           </div>
-          <h1 className="text-3xl font-black text-primary font-headline tracking-tight">PrecisionLoom</h1>
-          <p className="text-sm text-on-surface-variant font-body mt-1">Uniform Distribution System</p>
+          <h1 className="text-3xl font-black text-primary font-headline tracking-tight">SMP Al Azhar</h1>
+          <p className="text-sm text-on-surface-variant font-body mt-1">Sistem invetaris seragam</p>
         </div>
 
         {/* Login Card */}

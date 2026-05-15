@@ -15,7 +15,7 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "PrecisionLoom — Uniform Management",
+  title: "SMP Al Azhar — Inventaris Seragam",
   description: "School uniform distribution and inventory management system",
 };
 

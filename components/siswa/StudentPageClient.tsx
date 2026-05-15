@@ -148,9 +148,9 @@ export default function StudentPageClient({ initialData }: Props) {
                 onChange={(e) => { setGrade(e.target.value); setTimeout(handleSearch, 0); }}
               >
                 <option value="">All Classes</option>
-                <option value="10">Class 10</option>
-                <option value="11">Class 11</option>
-                <option value="12">Class 12</option>
+                <option value="7">Kelas 7</option>
+                <option value="8">Kelas 8</option>
+                <option value="9">Kelas 9</option>
               </select>
               <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-[20px]">expand_more</span>
             </div>
@@ -175,9 +175,9 @@ export default function StudentPageClient({ initialData }: Props) {
           <div className="w-full text-left font-body">
             <div className="grid grid-cols-12 gap-4 pb-4 px-4 text-xs font-semibold text-on-surface-variant uppercase tracking-wider">
               <div className="col-span-2">NIS</div>
-              <div className="col-span-3">Student Name</div>
-              <div className="col-span-2">Class</div>
-              <div className="col-span-3">Uniform Status</div>
+              <div className="col-span-3">Nama Siswa</div>
+              <div className="col-span-2">Kelas</div>
+              <div className="col-span-3">Status Seragam</div>
               <div className="col-span-2 text-right">Actions</div>
             </div>
 
@@ -242,11 +242,10 @@ export default function StudentPageClient({ initialData }: Props) {
                 {Array.from({ length: Math.min(meta.last_page, 5) }, (_, i) => i + 1).map((p) => (
                   <button
                     key={p}
-                    className={`px-3 py-1 rounded-md transition-colors ${
-                      p === meta.current_page
-                        ? "bg-surface-container text-on-surface font-medium"
-                        : "hover:bg-surface-container"
-                    }`}
+                    className={`px-3 py-1 rounded-md transition-colors ${p === meta.current_page
+                      ? "bg-surface-container text-on-surface font-medium"
+                      : "hover:bg-surface-container"
+                      }`}
                     onClick={() => handlePageChange(p)}
                   >
                     {p}
@@ -289,7 +288,7 @@ function StudentFormModal({
   const [nis, setNis] = useState(student?.nis ?? "");
   const [name, setName] = useState(student?.name ?? "");
   const [className, setClassName] = useState(student?.className ?? "");
-  const [grade, setGrade] = useState(student?.grade ?? 10);
+  const [grade, setGrade] = useState(student?.grade ?? 7);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -330,7 +329,7 @@ function StudentFormModal({
                 className="bg-surface-container-low text-on-surface text-sm border-0 border-b-2 border-outline-variant/20 focus:ring-0 focus:border-primary py-2.5 px-3 rounded-t-md transition-all outline-none"
                 value={className}
                 onChange={(e) => setClassName(e.target.value)}
-                placeholder="e.g. 10-A"
+                placeholder="e.g. 7A"
                 required
               />
             </div>
@@ -341,9 +340,9 @@ function StudentFormModal({
                 value={grade}
                 onChange={(e) => setGrade(parseInt(e.target.value))}
               >
-                <option value={10}>10</option>
-                <option value={11}>11</option>
-                <option value={12}>12</option>
+                <option value={7}>7</option>
+                <option value={8}>8</option>
+                <option value={9}>9</option>
               </select>
             </div>
           </div>
