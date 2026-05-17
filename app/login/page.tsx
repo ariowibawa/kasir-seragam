@@ -127,9 +127,6 @@ export default function LoginPage() {
           </form>
         </div>
 
-        <p className="text-center text-xs text-on-surface-variant mt-6 font-body">
-          Default: admin@sekolah.id / admin123
-        </p>
       </div>
     </div>
   );
